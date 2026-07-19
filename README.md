@@ -6,7 +6,7 @@ An enhanced version of Infinite Yield with additional commands, improvements, an
 loadstring(game:HttpGet("https://raw.githubusercontent.com/xyzruizee/new-eternalyield/refs/heads/main/script"))() 
 
 
-There is currently no discord server.
+https://discord.gg/RU7kwP7z4
 
 * Enhanced command set
 * Additional utilities
