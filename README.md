@@ -3,7 +3,7 @@
 An enhanced version of Infinite Yield with additional commands, improvements, and features.
 
 ## Script
-loadstring(game:HttpGet(https://raw.githubusercontent.com/xyzruizee/new-eternalyield/refs/heads/main/script"))() 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/xyzruizee/new-eternalyield/refs/heads/main/script"))() 
 
 
 There is currently no discord server.
