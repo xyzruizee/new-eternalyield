@@ -369,7 +369,7 @@ if makefolder and isfolder and writefile and isfile then
 	end)
 end
 
-currentVersion = "7.1.5"
+currentVersion = "7.1.6"
 
 ScaledHolder = Instance.new("Frame")
 Scale = Instance.new("UIScale")
@@ -4680,7 +4680,7 @@ end
 
 -- cmds
 CMDs = {}
-CMDs[#CMDs + 1] = {NAME = 'discord / support / help', DESC = 'Invite to the Infinite Yield discord server.'}
+CMDs[#CMDs + 1] = {NAME = 'discord / support / help', DESC = 'Invite to the Infinite and Eternal Yield Discord server'}
 CMDs[#CMDs + 1] = {NAME = 'guiscale [number]', DESC = 'Changes the size of the gui. [number] accepts decimals and whole numbers. Min is 0.4 and Max is 2'}
 CMDs[#CMDs + 1] = {NAME = 'console', DESC = 'Opens the Roblox console'}
 CMDs[#CMDs + 1] = {NAME = 'oldconsole', DESC = 'Loads an old-themed Roblox console'}
@@ -4776,6 +4776,7 @@ CMDs[#CMDs + 1] = {NAME = 'cframeflyspeed  / cflyspeed [num]', DESC = 'Sets cfly
 CMDs[#CMDs + 1] = {NAME = 'qefly [true / false]', DESC = 'Enables or disables the Q and E hotkeys for fly'}
 CMDs[#CMDs + 1] = {NAME = 'flygui', DESC = 'Gives you a fly ui script'}
 CMDs[#CMDs + 1] = {NAME = 'vehiclenoclip / vnoclip', DESC = 'Turns off vehicle collision'}
+CMDs[#CMDs + 1] = {NAME = 'hamsterball / hball', DESC = 'Ragdolls you'}
 CMDs[#CMDs + 1] = {NAME = 'vehicleclip / vclip / unvnoclip', DESC = 'Enables vehicle collision'}
 CMDs[#CMDs + 1] = {NAME = 'float /  platform', DESC = 'Spawns a platform beneath you causing you to float'}
 CMDs[#CMDs + 1] = {NAME = 'unfloat / noplatform', DESC = 'Removes the platform'}
@@ -4877,6 +4878,7 @@ CMDs[#CMDs + 1] = {NAME = 'tracers', DESC = 'Enables player line tracers'}
 CMDs[#CMDs + 1] = {NAME = 'untracers', DESC = 'Disables player line tracers'}
 CMDs[#CMDs + 1] = {NAME = 'tracersteam', DESC = 'Enables line tracers with team colors'}
 CMDs[#CMDs + 1] = {NAME = 'untracersteam', DESC = 'Disables team line tracers'}
+CMDs[#CMDs + 1] = {NAME = 'npcesp', DESC = 'Enables esp on npcs'}
 CMDs[#CMDs + 1] = {NAME = 'boxes', DESC = 'Enables player box ESP'}
 CMDs[#CMDs + 1] = {NAME = 'unboxes', DESC = 'Disables player box ESP'}
 CMDs[#CMDs + 1] = {NAME = 'boxesteam', DESC = 'Enables box ESP with team colors'}
@@ -4971,6 +4973,7 @@ CMDs[#CMDs + 1] = {NAME = 'day (CLIENT)', DESC = 'Changes the time to day for th
 CMDs[#CMDs + 1] = {NAME = 'night (CLIENT)', DESC = 'Changes the time to night for the client'}
 CMDs[#CMDs + 1] = {NAME = 'nofog (CLIENT)', DESC = 'Removes fog'}
 CMDs[#CMDs + 1] = {NAME = 'brightness [num] (CLIENT)', DESC = 'Changes the brightness lighting property'}
+CMDs[#CMDs + 1] = {NAME = 'title [text] [rgb] (CLIENT)', DESC = 'Gives a custom title before your name (visual)'}
 CMDs[#CMDs + 1] = {NAME = 'globalshadows / gshadows (CLIENT)', DESC = 'Enables global shadows'}
 CMDs[#CMDs + 1] = {NAME = 'noglobalshadows / nogshadows (CLIENT)', DESC = 'Disables global shadows'}
 CMDs[#CMDs + 1] = {NAME = 'headless (CLIENT)', DESC = 'Removes your head free'}
@@ -6775,7 +6778,7 @@ local TeleportCheck = false
 Players.LocalPlayer.OnTeleport:Connect(function(State)
 	if KeepInfYield and (not TeleportCheck) and queueteleport then
 		TeleportCheck = true
-		queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/Scxrpt/eternalyield/refs/heads/main/script'))()")
+		queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/xyzruizee/new-eternalyield/refs/heads/main/script'))()")
 	end
 end)
 
@@ -6822,8 +6825,8 @@ end)
 
 addcmd('discord', {'support', 'help'}, function(args, speaker)
 	if everyClipboard then
-		toClipboard('https://discord.com/invite/78ZuWSq')
-		notify('Discord Invite', 'Eternal Yield does not have a server, so here is IY server!\ndiscord.gg/78ZuWSq')
+		toClipboard('https://discord.com/invite/78ZuWSq <- IY       EY -> https://discord.gg/RU7kwP7z4')
+		notify('Discord Invite', 'Check your clipboard, both discord servers has been copied')
 	else
 		notify('Discord Invite', 'discord.gg/78ZuWSq')
 	end
@@ -8611,6 +8614,158 @@ addcmd('untracersteam', {}, function()
     notify('Tracers Team', 'Disabled')
 end)
 
+getgenv().NpcEspEnabled = false
+getgenv().NpcEspObjects = getgenv().NpcEspObjects or {}
+getgenv().NpcEspConnections = getgenv().NpcEspConnections or {}
+
+local function isNpc(model)
+    if not model:IsA("Model") then return false end
+    if game:GetService("Players"):GetPlayerFromCharacter(model) then return false end
+    if not model:FindFirstChild("Humanoid") then return false end
+    if not model:FindFirstChild("HumanoidRootPart") then return false end
+    return true
+end
+
+local function addEsp(model)
+    if getgenv().NpcEspObjects[model] then return end
+    
+    local esp = {
+        Box = Drawing.new("Square"),
+        Tracer = Drawing.new("Line"),
+        HealthBg = Drawing.new("Line"),
+        HealthFg = Drawing.new("Line"),
+        NameTag = Drawing.new("Text")
+    }
+    
+    esp.Box.Color = Color3.fromRGB(255, 255, 255)
+    esp.Box.Thickness = 1
+    esp.Box.Filled = false
+    
+    esp.Tracer.Color = Color3.fromRGB(255, 255, 255)
+    esp.Tracer.Thickness = 1
+    
+    esp.HealthBg.Color = Color3.fromRGB(0, 0, 0)
+    esp.HealthBg.Thickness = 3
+    
+    esp.HealthFg.Thickness = 1
+    
+    esp.NameTag.Color = Color3.fromRGB(255, 255, 255)
+    esp.NameTag.Size = 16
+    esp.NameTag.Center = true
+    esp.NameTag.Outline = true
+    esp.NameTag.OutlineColor = Color3.fromRGB(0, 0, 0)
+    
+    getgenv().NpcEspObjects[model] = esp
+end
+
+local function removeEsp(model)
+    local esp = getgenv().NpcEspObjects[model]
+    if esp then
+        esp.Box:Remove()
+        esp.Tracer:Remove()
+        esp.HealthBg:Remove()
+        esp.HealthFg:Remove()
+        esp.NameTag:Remove()
+        getgenv().NpcEspObjects[model] = nil
+    end
+end
+
+local function clearEsp()
+    for model, _ in pairs(getgenv().NpcEspObjects) do
+        removeEsp(model)
+    end
+    for _, conn in pairs(getgenv().NpcEspConnections) do
+        conn:Disconnect()
+    end
+    table.clear(getgenv().NpcEspConnections)
+end
+
+addcmd('npcesp', {'unnpcesp'}, function(args, speaker)
+    if getgenv().NpcEspEnabled then
+        getgenv().NpcEspEnabled = false
+        clearEsp()
+        return
+    end
+    
+    getgenv().NpcEspEnabled = true
+    
+    for _, v in pairs(workspace:GetDescendants()) do
+        if isNpc(v) then
+            addEsp(v)
+        end
+    end
+    
+    table.insert(getgenv().NpcEspConnections, workspace.DescendantAdded:Connect(function(desc)
+        task.wait(0.5)
+        if isNpc(desc) then
+            addEsp(desc)
+        end
+    end))
+    
+    table.insert(getgenv().NpcEspConnections, workspace.DescendantRemoving:Connect(function(desc)
+        if getgenv().NpcEspObjects[desc] then
+            removeEsp(desc)
+        end
+    end))
+    
+    local cam = workspace.CurrentCamera
+    
+    table.insert(getgenv().NpcEspConnections, game:GetService("RunService").RenderStepped:Connect(function()
+        for model, esp in pairs(getgenv().NpcEspObjects) do
+            local hum = model:FindFirstChild("Humanoid")
+            local root = model:FindFirstChild("HumanoidRootPart")
+            
+            if hum and root and hum.Health > 0 and model.Parent then
+                local head = model:FindFirstChild("Head") or root
+                local rootPos, onScreen = cam:WorldToViewportPoint(root.Position)
+                
+                if onScreen then
+                    local headPos = cam:WorldToViewportPoint(head.Position + Vector3.new(0, 0.5, 0))
+                    local legPos = cam:WorldToViewportPoint(root.Position - Vector3.new(0, 3, 0))
+                    
+                    local height = math.abs(headPos.Y - legPos.Y)
+                    local width = height / 2
+                    
+                    esp.Box.Size = Vector2.new(width, height)
+                    esp.Box.Position = Vector2.new(rootPos.X - width / 2, headPos.Y)
+                    esp.Box.Visible = true
+                    
+                    esp.Tracer.From = Vector2.new(cam.ViewportSize.X / 2, cam.ViewportSize.Y)
+                    esp.Tracer.To = Vector2.new(rootPos.X, legPos.Y)
+                    esp.Tracer.Visible = true
+                    
+                    local hp = math.clamp(hum.Health / hum.MaxHealth, 0, 1)
+                    
+                    esp.HealthBg.From = Vector2.new(esp.Box.Position.X - 6, esp.Box.Position.Y + height)
+                    esp.HealthBg.To = Vector2.new(esp.Box.Position.X - 6, esp.Box.Position.Y)
+                    esp.HealthBg.Visible = true
+                    
+                    esp.HealthFg.From = esp.HealthBg.From
+                    esp.HealthFg.To = Vector2.new(esp.Box.Position.X - 6, esp.Box.Position.Y + height - (height * hp))
+                    esp.HealthFg.Color = Color3.new(1 - hp, hp, 0)
+                    esp.HealthFg.Visible = true
+                    
+                    esp.NameTag.Text = model.Name
+                    esp.NameTag.Position = Vector2.new(esp.Box.Position.X + (width / 2), esp.Box.Position.Y - 18)
+                    esp.NameTag.Visible = true
+                else
+                    esp.Box.Visible = false
+                    esp.Tracer.Visible = false
+                    esp.HealthBg.Visible = false
+                    esp.HealthFg.Visible = false
+                    esp.NameTag.Visible = false
+                end
+            else
+                esp.Box.Visible = false
+                esp.Tracer.Visible = false
+                esp.HealthBg.Visible = false
+                esp.HealthFg.Visible = false
+                esp.NameTag.Visible = false
+            end
+        end
+    end))
+end)
+
 addcmd('boxes', {}, function()
     BoxesEnabled = true
     BoxesTeamCheck = false
@@ -9735,6 +9890,151 @@ addcmd("vehicleclip", {"vclip", "unvnoclip", "unvehiclenoclip"}, function(args, 
 		v.CanCollide = true
 	end
 	vnoclipParts = {}
+end)
+
+getgenv().HamsterActive = false
+getgenv().HamsterConnections = {}
+getgenv().HamsterState = {}
+
+local function disableHamster()
+    if not getgenv().HamsterActive then return end
+    getgenv().HamsterActive = false
+    
+    for _, conn in pairs(getgenv().HamsterConnections) do
+        conn:Disconnect()
+    end
+    table.clear(getgenv().HamsterConnections)
+    
+    local lp = game:GetService("Players").LocalPlayer
+    local char = lp.Character
+    local hum = char and char:FindFirstChildOfClass("Humanoid")
+    local root = char and char:FindFirstChild("HumanoidRootPart")
+    local cam = workspace.CurrentCamera
+    
+    if root and getgenv().HamsterState.Root then
+        root.Shape = getgenv().HamsterState.Root.Shape
+        root.Size = getgenv().HamsterState.Root.Size
+        root.Transparency = getgenv().HamsterState.Root.Transparency
+        root.Material = getgenv().HamsterState.Root.Material
+    end
+    
+    if hum and getgenv().HamsterState.Hum then
+        hum.HipHeight = getgenv().HamsterState.Hum.HipHeight
+        hum.PlatformStand = getgenv().HamsterState.Hum.PlatformStand
+        hum.AutoRotate = getgenv().HamsterState.Hum.AutoRotate
+        hum.Sit = getgenv().HamsterState.Hum.Sit
+    end
+    
+    if char then
+        for part, collide in pairs(getgenv().HamsterState.Collide or {}) do
+            if part and part.Parent then
+                part.CanCollide = collide
+            end
+        end
+    end
+    
+    if cam and hum then
+        cam.CameraSubject = hum
+    end
+    
+    table.clear(getgenv().HamsterState)
+end
+
+addcmd('hamsterball', {'hball', 'unhamsterball'}, function(args, speaker)
+    if getgenv().HamsterActive then
+        disableHamster()
+        return
+    end
+    
+    local lp = game:GetService("Players").LocalPlayer
+    local char = lp.Character
+    if not char then return end
+    local hum = char:FindFirstChildOfClass("Humanoid")
+    local root = char:FindFirstChild("HumanoidRootPart")
+    if not hum or not root then return end
+    
+    getgenv().HamsterActive = true
+    
+    getgenv().HamsterState = {
+        Root = {
+            Shape = root.Shape,
+            Size = root.Size,
+            Transparency = root.Transparency,
+            Material = root.Material
+        },
+        Hum = {
+            HipHeight = hum.HipHeight,
+            PlatformStand = hum.PlatformStand,
+            AutoRotate = hum.AutoRotate,
+            Sit = hum.Sit
+        },
+        Collide = {}
+    }
+    
+    for _, v in pairs(char:GetDescendants()) do
+        if v:IsA("BasePart") then
+            getgenv().HamsterState.Collide[v] = v.CanCollide
+            v.CanCollide = false
+        end
+    end
+    
+    root.Shape = Enum.PartType.Ball
+    root.Size = Vector3.new(5, 5, 5)
+    
+    local cam = workspace.CurrentCamera
+    if cam then
+        cam.CameraSubject = root
+    end
+    
+    local uis = game:GetService("UserInputService")
+    local rs = game:GetService("RunService")
+    
+    local speedMult = tonumber(args[1]) or 30
+    local jumpPower = 60
+    local jumpGap = 0.3
+    
+    local params = RaycastParams.new()
+    params.FilterType = Enum.RaycastFilterType.Exclude
+    params.FilterDescendantsInstances = {char}
+    
+    table.insert(getgenv().HamsterConnections, rs.RenderStepped:Connect(function(delta)
+        if not getgenv().HamsterActive or not root or not root.Parent or not hum or not hum.Parent then return end
+        
+        root.CanCollide = true
+        hum.PlatformStand = true
+        
+        local moveX, moveZ = 0, 0
+        if uis:IsKeyDown(Enum.KeyCode.W) then moveZ = moveZ - 1 end
+        if uis:IsKeyDown(Enum.KeyCode.S) then moveZ = moveZ + 1 end
+        if uis:IsKeyDown(Enum.KeyCode.A) then moveX = moveX - 1 end
+        if uis:IsKeyDown(Enum.KeyCode.D) then moveX = moveX + 1 end
+        
+        if moveX ~= 0 or moveZ ~= 0 then
+            local right = cam.CFrame.RightVector
+            local forward = cam.CFrame.LookVector
+            
+            root.RotVelocity = root.RotVelocity + (right * moveZ * delta * speedMult)
+            root.RotVelocity = root.RotVelocity + (forward * moveX * delta * speedMult)
+        end
+    end))
+    
+    table.insert(getgenv().HamsterConnections, uis.JumpRequest:Connect(function()
+        if not getgenv().HamsterActive or not root or not root.Parent then return end
+        
+        local result = workspace:Raycast(
+            root.Position,
+            Vector3.new(0, -((root.Size.Y / 2) + jumpGap), 0),
+            params
+        )
+        
+        if result then
+            root.Velocity = root.Velocity + Vector3.new(0, jumpPower, 0)
+        end
+    end))
+    
+    table.insert(getgenv().HamsterConnections, hum.Died:Connect(function()
+        disableHamster()
+    end))
 end)
 
 addcmd("togglevnoclip", {}, function(args, speaker)
@@ -12537,6 +12837,51 @@ end)
 addcmd('brightness',{},function(args, speaker)
 	Lighting.Brightness = args[1]
 end)
+
+getgenv().TitleText = nil
+getgenv().TitleRGB = "255,255,255"
+
+addcmd('title', {'settitle'}, function(args, speaker)
+    if args[1] and args[2] and args[3] and args[4] then
+        getgenv().TitleText = string.gsub(args[1], "_", " ")
+        getgenv().TitleRGB = args[2] .. "," .. args[3] .. "," .. args[4]
+    else
+        getgenv().TitleText = nil
+    end
+end)
+
+local tcs = game:GetService("TextChatService")
+if tcs.ChatVersion == Enum.ChatVersion.TextChatService then
+    tcs.OnIncomingMessage = function(message)
+        local props = Instance.new("TextChatMessageProperties")
+        if message.TextSource then
+            local lp = game:GetService("Players").LocalPlayer
+            if message.TextSource.UserId == lp.UserId and getgenv().TitleText then
+                props.PrefixText = "<font color='rgb(" .. getgenv().TitleRGB .. ")'>[" .. getgenv().TitleText .. "]</font> " .. message.PrefixText
+            end
+        end
+        return props
+    end
+end
+
+local rep = game:GetService("ReplicatedStorage")
+local events = rep:FindFirstChild("DefaultChatSystemChatEvents")
+if events and events:FindFirstChild("OnNewMessage") then
+    local old
+    old = hookfunction(events.OnNewMessage.OnClientEvent, function(data, ...)
+        local lp = game:GetService("Players").LocalPlayer
+        if data and data.SpeakerUserId == lp.UserId and getgenv().TitleText then
+            local split = string.split(getgenv().TitleRGB, ",")
+            data.ExtraData = type(data.ExtraData) == "table" and data.ExtraData or {}
+            data.ExtraData.Tags = type(data.ExtraData.Tags) == "table" and data.ExtraData.Tags or {}
+            table.insert(data.ExtraData.Tags, 1, {
+                TagText = getgenv().TitleText,
+                TagColor = Color3.fromRGB(tonumber(split[1]), tonumber(split[2]), tonumber(split[3]))
+            })
+        end
+        return old(data, ...)
+    end)
+end
 
 addcmd('globalshadows',{'gshadows'},function(args, speaker)
 	Lighting.GlobalShadows = true
@@ -15684,13 +16029,13 @@ end)
 
 task.spawn(function()
 	local success, latestVersionInfo = pcall(function() 
-		local versionJson = game:HttpGet("https://raw.githubusercontent.com/Scxrpt/eternalyield/refs/heads/main/version")
+		local versionJson = game:HttpGet("https://raw.githubusercontent.com/xyzruizee/new-eternalyield/refs/heads/main/version")
 		return HttpService:JSONDecode(versionJson)
 	end)
 
 	if success then
 		if currentVersion ~= latestVersionInfo.Version then
-			notify("Outdated", "You are on the wrong version, please get it from https://raw.githubusercontent.com/Scxrpt/eternalyield/refs/heads/main/script")
+			notify("Outdated", "Wrong version detected, get it at https://raw.githubusercontent.com/xyzruizee/new-eternalyield/refs/heads/main/script")
 		end
 
 		if latestVersionInfo.Announcement and latestVersionInfo.Announcement ~= "" then
@@ -15824,4 +16169,4 @@ elseif check("Delta") or check("Codex") or check("ArceusX") or check("Cryptic") 
 else
     notify("Executor Status", "Your executor is supported! " .. execName)
 end
-notify('Script last updated: 07/13/2026 at 2:47 PM')
+notify('Script last updated: 07/19/2026 at 9:59 PM')
