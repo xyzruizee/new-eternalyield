@@ -369,7 +369,7 @@ if makefolder and isfolder and writefile and isfile then
 	end)
 end
 
-currentVersion = "7.1.6"
+currentVersion = "7.1.7"
 
 ScaledHolder = Instance.new("Frame")
 Scale = Instance.new("UIScale")
@@ -4680,16 +4680,21 @@ end
 
 -- cmds
 CMDs = {}
+CMDs[#CMDs + 1] = {NAME = '⚠️ = risky', DESC = 'A command having ⚠️ before its name means it may get your account banned (not 100%)'}
+CMDs[#CMDs + 1] = {NAME = '📜 = script', DESC = 'A command having 📜 before its name means it will load another script'}
+CMDs[#CMDs + 1] = {NAME = '❓ = bugged', DESC = 'A command having ❓ before its name means the function may bug'}
+CMDs[#CMDs + 1] = {NAME = '👁️ = visual', DESC = 'A command having 👁️ before its name means its client sided'}
+CMDs[#CMDs + 1] = {NAME = '', DESC = ''}
 CMDs[#CMDs + 1] = {NAME = 'discord / support / help', DESC = 'Invite to the Infinite and Eternal Yield Discord server'}
 CMDs[#CMDs + 1] = {NAME = 'guiscale [number]', DESC = 'Changes the size of the gui. [number] accepts decimals and whole numbers. Min is 0.4 and Max is 2'}
 CMDs[#CMDs + 1] = {NAME = 'console', DESC = 'Opens the Roblox console'}
 CMDs[#CMDs + 1] = {NAME = 'oldconsole', DESC = 'Loads an old-themed Roblox console'}
 CMDs[#CMDs + 1] = {NAME = 'checkexecutor / cexec', DESC = 'Checks your current executor environment and displays its performance statistics'}
-CMDs[#CMDs + 1] = {NAME = 'synapsex / synx', DESC = 'Loads a Synapse X remake that you can use to execute'}
-CMDs[#CMDs + 1] = {NAME = 'explorer / dex', DESC = 'Opens DEX IY Moon'}
-CMDs[#CMDs + 1] = {NAME = 'vex / vexplorer', DESC = 'Opens VEX Explorer (better Dex)'}
-CMDs[#CMDs + 1] = {NAME = 'unctest', DESC = 'Loads UNC Test for your executor'}
-CMDs[#CMDs + 1] = {NAME = 'cobalt / cspy', DESC = 'Opens Cobalt to intercept incoming and outgoing network traffic'}
+CMDs[#CMDs + 1] = {NAME = '📜 synapsex / synx', DESC = 'Loads a Synapse X remake that you can use to execute'}
+CMDs[#CMDs + 1] = {NAME = '📜 explorer / dex', DESC = 'Opens DEX IY Moon'}
+CMDs[#CMDs + 1] = {NAME = '📜 vex / vexplorer', DESC = 'Opens VEX Explorer (better Dex)'}
+CMDs[#CMDs + 1] = {NAME = '📜 unctest', DESC = 'Loads UNC Test for your executor'}
+CMDs[#CMDs + 1] = {NAME = '📜 cobalt / cspy', DESC = 'Opens Cobalt to intercept incoming and outgoing network traffic'}
 CMDs[#CMDs + 1] = {NAME = 'remotespy / rspy', DESC = 'Opens Simple Spy V3 to intercept remote calls from the client to the server'}
 CMDs[#CMDs + 1] = {NAME = 'audiologger / alogger', DESC = 'Opens Edges audio logger'}
 CMDs[#CMDs + 1] = {NAME = 'serverinfo / info', DESC = 'Gives you info about the server'}
@@ -4721,7 +4726,7 @@ CMDs[#CMDs + 1] = {NAME = 'hideguis', DESC = 'Hides any GUIs in PlayerGui'}
 CMDs[#CMDs + 1] = {NAME = 'unhideguis', DESC = 'Undoes hideguis'}
 CMDs[#CMDs + 1] = {NAME = 'guidelete', DESC = 'Enables backspace to delete GUI'}
 CMDs[#CMDs + 1] = {NAME = 'unguidelete / noguidelete', DESC = 'Disables guidelete'}
-CMDs[#CMDs + 1] = {NAME = 'c00lgui', DESC = 'Loads coolkid gui (clientsided)'}
+CMDs[#CMDs + 1] = {NAME = '📜👁️ c00lgui', DESC = 'Loads coolkid gui (clientsided)'}
 CMDs[#CMDs + 1] = {NAME = 'hideEY', DESC = 'Hides the main EY GUI'}
 CMDs[#CMDs + 1] = {NAME = 'showEY / unhideEY', DESC = 'Shows EY again'}
 CMDs[#CMDs + 1] = {NAME = 'keepEY', DESC = 'Auto execute EY when you teleport through servers'}
@@ -4774,7 +4779,7 @@ CMDs[#CMDs + 1] = {NAME = 'cframefly / cfly [speed]', DESC = 'Makes you fly, byp
 CMDs[#CMDs + 1] = {NAME = 'uncframefly / uncfly', DESC = 'Disables cfly'}
 CMDs[#CMDs + 1] = {NAME = 'cframeflyspeed  / cflyspeed [num]', DESC = 'Sets cfly speed'}
 CMDs[#CMDs + 1] = {NAME = 'qefly [true / false]', DESC = 'Enables or disables the Q and E hotkeys for fly'}
-CMDs[#CMDs + 1] = {NAME = 'flygui', DESC = 'Gives you a fly ui script'}
+CMDs[#CMDs + 1] = {NAME = '📜 flygui', DESC = 'Gives you a fly ui script'}
 CMDs[#CMDs + 1] = {NAME = 'vehiclenoclip / vnoclip', DESC = 'Turns off vehicle collision'}
 CMDs[#CMDs + 1] = {NAME = 'hamsterball / hball', DESC = 'Ragdolls you'}
 CMDs[#CMDs + 1] = {NAME = 'vehicleclip / vclip / unvnoclip', DESC = 'Enables vehicle collision'}
@@ -4808,7 +4813,7 @@ CMDs[#CMDs + 1] = {NAME = 'loopbring [player] [distance] [delay] (CLIENT)', DESC
 CMDs[#CMDs + 1] = {NAME = 'unloopbring [player]', DESC = 'Undoes loopbring'}
 CMDs[#CMDs + 1] = {NAME = 'hide [plr]', DESC = 'Hides the specified player\'s avatar locally'}
 CMDs[#CMDs + 1] = {NAME = 'show [plr]', DESC = 'Shows the specified hidden player\'s avatar locally'}
-CMDs[#CMDs + 1] = {NAME = 'freeze / fr [player] (CLIENT)', DESC = 'Freezes a player'}
+CMDs[#CMDs + 1] = {NAME = '👁️ freeze / fr [player] (CLIENT)', DESC = 'Freezes a player'}
 CMDs[#CMDs + 1] = {NAME = 'freezeanims', DESC = 'Freezes your animations / pauses your animations - Does not work on default animations'}
 CMDs[#CMDs + 1] = {NAME = 'unfreezeanims', DESC = 'Unfreezes your animations / plays your animations'}
 CMDs[#CMDs + 1] = {NAME = 'thaw / unfr [player] (CLIENT)', DESC = 'Unfreezes a player'}
@@ -4832,6 +4837,9 @@ CMDs[#CMDs + 1] = {NAME = 'nospawnpoint / nospawn', DESC = 'Removes your custom 
 CMDs[#CMDs + 1] = {NAME = 'flashback / diedtp', DESC = 'Teleports you to where you last died'}
 CMDs[#CMDs + 1] = {NAME = 'walltp', DESC = 'Teleports you above/over any wall you run into'}
 CMDs[#CMDs + 1] = {NAME = 'nowalltp / unwalltp', DESC = 'Disables walltp'}
+CMDs[#CMDs + 1] = {NAME = '👁️ leaderstat / lstat [name] [value] (CLIENT)', DESC = 'Locally changes leaderboard points'}
+CMDs[#CMDs + 1] = {NAME = '👁️ resetleaderstat / resetlstat', DESC = 'Reverts leaderboard'}
+
 CMDs[#CMDs + 1] = {NAME = 'playerlist / plist', DESC = 'Opens the playerlist (does currently not contain all player commands on it)'}
 CMDs[#CMDs + 1] = {NAME = 'teleporttool / tptool', DESC = 'Gives you a teleport tool'}
 CMDs[#CMDs + 1] = {NAME = '', DESC = ''}
@@ -4853,7 +4861,7 @@ CMDs[#CMDs + 1] = {NAME = 'unbubblechat / nobubblechat', DESC = 'Disables the bu
 CMDs[#CMDs + 1] = {NAME = 'chatwindow', DESC = 'Enables the chat window for your client'}
 CMDs[#CMDs + 1] = {NAME = 'unchatwindow / nochatwindow', DESC = 'Disables the chat window for your client'}
 CMDs[#CMDs + 1] = {NAME = 'darkchat', DESC = 'Makes the chat window dark for your client'}
-CMDs[#CMDs + 1] = {NAME = 'fakechat / fakec [player] [msg] (CLIENT)', DESC = 'Makes a player send what message you want'}
+CMDs[#CMDs + 1] = {NAME = '👁️ fakechat / fakec [player] [msg] (CLIENT)', DESC = 'Makes a player send what message you want'}
 CMDs[#CMDs + 1] = {NAME = 'fakechatspam / fakecspam / fakecs [player] [msg] [delay] (CLIENT)', DESC = 'Spams fake chat'}
 CMDs[#CMDs + 1] = {NAME = 'unfakechatspam / unfakecspam / ufakecs', DESC = 'Stops fake chat spam'}
 CMDs[#CMDs + 1] = {NAME = 'unfakecspam', DESC = 'stops the fake chat spam loop'}
@@ -4883,7 +4891,7 @@ CMDs[#CMDs + 1] = {NAME = 'boxes', DESC = 'Enables player box ESP'}
 CMDs[#CMDs + 1] = {NAME = 'unboxes', DESC = 'Disables player box ESP'}
 CMDs[#CMDs + 1] = {NAME = 'boxesteam', DESC = 'Enables box ESP with team colors'}
 CMDs[#CMDs + 1] = {NAME = 'unboxesteam', DESC = 'Disables team box ESP'}
-CMDs[#CMDs + 1] = {NAME = 'unnamedesp / uesp', DESC = 'Executes a ESP script'}
+CMDs[#CMDs + 1] = {NAME = '📜 unnamedesp / uesp', DESC = 'Executes a ESP script'}
 CMDs[#CMDs + 1] = {NAME = 'locate [player]', DESC = 'View a single player and their status'}
 CMDs[#CMDs + 1] = {NAME = 'unlocate / nolocate [player]', DESC = 'Removes locate'}
 CMDs[#CMDs + 1] = {NAME = 'xray', DESC = 'Makes all parts in workspace transparent'}
@@ -4920,8 +4928,8 @@ CMDs[#CMDs + 1] = {NAME = 'enableshiftlock / enablesl', DESC = 'Enables the shif
 CMDs[#CMDs + 1] = {NAME = 'lookat [player]', DESC = 'Moves your camera view to a player'}
 
 CMDs[#CMDs + 1] = {NAME = '', DESC = ''}
-CMDs[#CMDs + 1] = {NAME = 'btools (CLIENT)', DESC = 'Gives you building tools (DOES NOT REPLICATE)'}
-CMDs[#CMDs + 1] = {NAME = 'f3x (CLIENT)', DESC = 'Gives you F3X building tools (DOES NOT REPLICATE)'}
+CMDs[#CMDs + 1] = {NAME = '👁️btools (CLIENT)', DESC = 'Gives you building tools (DOES NOT REPLICATE)'}
+CMDs[#CMDs + 1] = {NAME = '📜👁️ f3x (CLIENT)', DESC = 'Gives you F3X building tools (DOES NOT REPLICATE)'}
 CMDs[#CMDs + 1] = {NAME = 'partname / partpath', DESC = 'Allows you to click a part to see its path & name'}
 CMDs[#CMDs + 1] = {NAME = 'balls', DESC = 'Gives you balls  (Only works on the Synapse Z executor)'}
 CMDs[#CMDs + 1] = {NAME = 'niggaballs', DESC = 'Gives you black balls  (Only works on the Synapse Z executor)'}
@@ -4969,10 +4977,12 @@ CMDs[#CMDs + 1] = {NAME = 'fullbright / fb (CLIENT)', DESC = 'Makes the map brig
 CMDs[#CMDs + 1] = {NAME = 'loopfullbright / loopfb (CLIENT)', DESC = 'Makes the map brighter / more visible but looped'}
 CMDs[#CMDs + 1] = {NAME = 'unloopfullbright / unloopfb', DESC = 'Unloops fullbright'}
 CMDs[#CMDs + 1] = {NAME = 'ambient [num] [num] [num] (CLIENT)', DESC = 'Changes ambient'}
-CMDs[#CMDs + 1] = {NAME = 'day (CLIENT)', DESC = 'Changes the time to day for the client'}
-CMDs[#CMDs + 1] = {NAME = 'night (CLIENT)', DESC = 'Changes the time to night for the client'}
-CMDs[#CMDs + 1] = {NAME = 'nofog (CLIENT)', DESC = 'Removes fog'}
+CMDs[#CMDs + 1] = {NAME = '👁️ day (CLIENT)', DESC = 'Changes the time to day for the client'}
+CMDs[#CMDs + 1] = {NAME = '👁️ night (CLIENT)', DESC = 'Changes the time to night for the client'}
+CMDs[#CMDs + 1] = {NAME = '👁️ nofog (CLIENT)', DESC = 'Removes fog'}
 CMDs[#CMDs + 1] = {NAME = 'brightness [num] (CLIENT)', DESC = 'Changes the brightness lighting property'}
+CMDs[#CMDs + 1] = {NAME = 'rtxgraphics / rtxg', DESC = 'Gives you Rtx graphics'}
+CMDs[#CMDs + 1] = {NAME = 'unrtxgraphics / unrtxg', DESC = 'Removes the rtx graphics'}
 CMDs[#CMDs + 1] = {NAME = 'title [text] [rgb] (CLIENT)', DESC = 'Gives a custom title before your name (visual)'}
 CMDs[#CMDs + 1] = {NAME = 'globalshadows / gshadows (CLIENT)', DESC = 'Enables global shadows'}
 CMDs[#CMDs + 1] = {NAME = 'noglobalshadows / nogshadows (CLIENT)', DESC = 'Disables global shadows'}
@@ -5013,8 +5023,8 @@ CMDs[#CMDs + 1] = {NAME = 'pathfindwalktowaypoint / pathfindwalktowp [waypoint]'
 CMDs[#CMDs + 1] = {NAME = 'unwalkto / unfollow', DESC = 'Stops following a player'}
 CMDs[#CMDs + 1] = {NAME = 'orbit [player] [speed] [distance]', DESC = 'Makes your character orbit around a player with an optional speed and an optional distance'}
 CMDs[#CMDs + 1] = {NAME = 'unorbit', DESC = 'Disables orbit'}
-CMDs[#CMDs + 1] = {NAME = 'stareat / stare [player]', DESC = 'Stare / look at a player'}
-CMDs[#CMDs + 1] = {NAME = 'unstareat / unstare [player]', DESC = 'Disables stareat'}
+CMDs[#CMDs + 1] = {NAME = '❓ stareat / stare [player]', DESC = 'Stare / look at a player'}
+CMDs[#CMDs + 1] = {NAME = '❓ unstareat / unstare [player]', DESC = 'Disables stareat'}
 CMDs[#CMDs + 1] = {NAME = 'rolewatch [group id] [role name]', DESC = 'Notify if someone from a watched group joins the server'}
 CMDs[#CMDs + 1] = {NAME = 'rolewatchstop / unrolewatch', DESC = 'Disable Rolewatch'}
 CMDs[#CMDs + 1] = {NAME = 'rolewatchleave', DESC = 'Toggle if you should leave the game if someone from a watched group joins the server'}
@@ -5026,21 +5036,24 @@ CMDs[#CMDs + 1] = {NAME = 'notifyantimod / notifynantimod / notifyantistaff [use
 CMDs[#CMDs + 1] = {NAME = 'clearantimod / clearantistaff / clrantimod / clrantistaff', DESC = 'Clears every userId from the antimod kick list'}
 CMDs[#CMDs + 1] = {NAME = 'clearnotifyam / clearnotifyas / clrnam / clrnas', DESC = 'Clears every userId from the antimod notify list'}
 CMDs[#CMDs + 1] = {NAME = 'findfriendgroups', DESC = 'Notifies you if any players are friends with each other'}
+CMDs[#CMDs + 1] = {NAME = 'notifyfriends', DESC = 'Shows how many friends are in your server & online'}
 CMDs[#CMDs + 1] = {NAME = 'handlekill / hkill [player] [radius] (TOOL)', DESC = 'Kills a player using tool damage (YOU NEED A TOOL)'}
 CMDs[#CMDs + 1] = {NAME = 'fling', DESC = 'Flings anyone you touch'}
 CMDs[#CMDs + 1] = {NAME = 'unfling', DESC = 'Disables the fling command'}
-CMDs[#CMDs + 1] = {NAME = 'weldfling / wfling [plr]', DESC = 'Flings the player using weld method'}
+CMDs[#CMDs + 1] = {NAME = '❓ weldfling / wfling [plr]', DESC = 'Flings the player using weld method'}
 CMDs[#CMDs + 1] = {NAME = 'flyfling [speed]', DESC = 'Basically the invisfling command but not invisible'}
 CMDs[#CMDs + 1] = {NAME = 'unflyfling', DESC = 'Disables the flyfling command'}
-CMDs[#CMDs + 1] = {NAME = 'walkfling', DESC = 'Basically fling but no spinning'}
-CMDs[#CMDs + 1] = {NAME = 'unwalkfling / nowalkfling', DESC = 'Disables walkfling'}
-CMDs[#CMDs + 1] = {NAME = 'invisfling', DESC = 'Enables invisible fling (the invis part is patched, try using the god command before using this)'}
+CMDs[#CMDs + 1] = {NAME = '❓ walkfling', DESC = 'Basically fling but no spinning'}
+CMDs[#CMDs + 1] = {NAME = '❓ unwalkfling / nowalkfling', DESC = 'Disables walkfling'}
+CMDs[#CMDs + 1] = {NAME = '❓ invisfling', DESC = 'Enables invisible fling (the invis part is patched, try using the god command before using this)'}
 CMDs[#CMDs + 1] = {NAME = 'antifling', DESC = 'Disables player collisions to prevent you from being flung'}
 CMDs[#CMDs + 1] = {NAME = 'unantifling', DESC = 'Disables antifling'}
 CMDs[#CMDs + 1] = {NAME = 'loopoof', DESC = 'Loops everyones character sounds (everyone can hear)'}
 CMDs[#CMDs + 1] = {NAME = 'unloopoof', DESC = 'Stops the oof chaos'}
 CMDs[#CMDs + 1] = {NAME = 'muteboombox [player]', DESC = 'Mutes someones boombox'}
 CMDs[#CMDs + 1] = {NAME = 'unmuteboombox [player]', DESC = 'Unmutes someones boombox'}
+CMDs[#CMDs + 1] = {NAME = 'hitboxes', DESC = 'Shows all rendered bounding boxes'}
+CMDs[#CMDs + 1] = {NAME = 'unhitboxes', DESC = 'Stops showing all rendered bounding boxes'}
 CMDs[#CMDs + 1] = {NAME = 'hitbox [player] [size] [transparency]', DESC = 'Expands the hitbox for players HumanoidRootPart (default is 1)'}
 CMDs[#CMDs + 1] = {NAME = 'headsize [player] [size]', DESC = 'Expands the head size for players Head (default is 1)'}
 CMDs[#CMDs + 1] = {NAME = '', DESC = ''}
@@ -5145,6 +5158,7 @@ CMDs[#CMDs + 1] = {NAME = 'stopanimations / stopanims', DESC = 'Stops running an
 CMDs[#CMDs + 1] = {NAME = 'refreshanimations / refreshanims', DESC = 'Refreshes animations'}
 CMDs[#CMDs + 1] = {NAME = 'allowcustomanim / allowcustomanimations', DESC = 'Lets you use custom animation packs instead'}
 CMDs[#CMDs + 1] = {NAME = 'unallowcustomanim / unallowcustomanimations', DESC = 'Doesn\'t let you use custom animation packs instead'}
+
 CMDs[#CMDs + 1] = {NAME = '', DESC = ''}
 CMDs[#CMDs + 1] = {NAME = 'autoclick [click delay] [release delay]', DESC = 'Automatically clicks your mouse with a set delay'}
 CMDs[#CMDs + 1] = {NAME = 'unautoclick / noautoclick', DESC = 'Turns off autoclick'}
@@ -9564,7 +9578,7 @@ addcmd("promptr15", {"pr15"}, function(args, speaker)
 end)
 
 addcmd('promptr63', {'pr63'}, function(args, speaker)
-    game:GetService("Players").LocalPlayer:Kick("nahhhhhh son 🥀")
+    game:GetService("Players").LocalPlayer:Kick("You have been permanently banned.")
 end)
 
 addcmd("wallwalk", {"walkonwalls"}, function(args, speaker)
@@ -10506,6 +10520,7 @@ addcmd('unmuteboombox',{},function(args, speaker)
 	end
 end)
 
+
 addcmd("reset", {"rst"}, function(args, speaker)
 	local humanoid = speaker.Character and speaker.Character:FindFirstChildWhichIsA("Humanoid")
 	if humanoid then
@@ -11313,6 +11328,7 @@ addcmd('unallowcustomanim', {'unallowcustomanimations'}, function(args, speaker)
 	StarterPlayer.AllowCustomAnimations = false
 	execCmd('refreshanimations')
 end)
+
 
 addcmd('loopanimation', {'loopanim'},function(args, speaker)
 	local Char = speaker.Character
@@ -12838,6 +12854,99 @@ addcmd('brightness',{},function(args, speaker)
 	Lighting.Brightness = args[1]
 end)
 
+addcmd('rtxgraphics', {'rtxg'}, function(args, speaker)
+    local lighting = game:GetService("Lighting")
+    local terrain = workspace:FindFirstChildOfClass("Terrain")
+
+    pcall(function()
+        lighting.Technology = Enum.Technology.Future
+    end)
+
+    lighting.GlobalShadows = true
+    lighting.Brightness = 4
+    lighting.EnvironmentDiffuseScale = 1
+    lighting.EnvironmentSpecularScale = 1
+    
+    local function createEffect(className, props)
+        local effect = lighting:FindFirstChild(className) or Instance.new(className)
+        effect.Name = className
+        for prop, val in pairs(props) do
+            effect[prop] = val
+        end
+        effect.Parent = lighting
+    end
+
+    createEffect("BloomEffect", {Intensity = 0.3, Size = 56, Threshold = 0.8})
+    createEffect("ColorCorrectionEffect", {Contrast = 0.3, Saturation = 0.5, Brightness = 0.1})
+    createEffect("SunRaysEffect", {Intensity = 0.2, Spread = 1})
+    createEffect("DepthOfFieldEffect", {FocusDistance = 50, InFocusRadius = 50, NearIntensity = 0.2, FarIntensity = 0.5})
+
+    if terrain then
+        terrain.WaterWaveSize = 0.15
+        terrain.WaterWaveSpeed = 12
+        terrain.WaterReflectance = 1
+        terrain.WaterTransparency = 0.8
+    end
+
+    task.spawn(function()
+        for _, obj in pairs(workspace:GetDescendants()) do
+            if obj:IsA("BasePart") then
+                if obj.Material == Enum.Material.Plastic then
+                    obj.Material = Enum.Material.SmoothPlastic
+                end
+                if obj.Reflectance < 0.2 then
+                    obj.Reflectance = 0.2
+                end
+            end
+        end
+    end)
+
+    notify('RTX Graphics', 'Shiny shaders applied successfully')
+end)
+
+addcmd('unrtxgraphics', {'unrtxg'}, function(args, speaker)
+    local lighting = game:GetService("Lighting")
+    local terrain = workspace:FindFirstChildOfClass("Terrain")
+
+    pcall(function()
+        lighting.Technology = Enum.Technology.ShadowMap
+    end)
+
+    lighting.Brightness = 2
+    lighting.EnvironmentDiffuseScale = 0
+    lighting.EnvironmentSpecularScale = 0
+    
+    local effects = {"BloomEffect", "ColorCorrectionEffect", "SunRaysEffect", "DepthOfFieldEffect"}
+    for _, effectName in pairs(effects) do
+        local effect = lighting:FindFirstChild(effectName)
+        if effect then
+            effect:Destroy()
+        end
+    end
+
+    if terrain then
+        terrain.WaterWaveSize = 0.15
+        terrain.WaterWaveSpeed = 10
+        terrain.WaterReflectance = 1
+        terrain.WaterTransparency = 0.3
+    end
+
+    task.spawn(function()
+        for _, obj in pairs(workspace:GetDescendants()) do
+            if obj:IsA("BasePart") then
+                if obj.Material == Enum.Material.SmoothPlastic then
+                    obj.Material = Enum.Material.Plastic
+                end
+                if obj.Reflectance == 0.2 then
+                    obj.Reflectance = 0
+                end
+            end
+        end
+    end)
+
+    notify('RTX Graphics', 'Shaders removed successfully')
+end)
+
 getgenv().TitleText = nil
 getgenv().TitleRGB = "255,255,255"
 
@@ -13121,7 +13230,6 @@ addcmd('playerlist',{'plist'},function(args, speaker)
     local UserInputService = game:GetService("UserInputService")
     local LocalPlayer = Players.LocalPlayer
 
-    -- Check if GUI already exists to toggle visibility instead of duplicating
     local targetParent = nil
     local coreGuiSuccess, coreGuiError = pcall(function()
         targetParent = game:GetService("CoreGui"):FindFirstChild("RobloxGui") or game:GetService("CoreGui")
@@ -13139,7 +13247,6 @@ addcmd('playerlist',{'plist'},function(args, speaker)
         return
     end
 
-    -- Persistent variables wrapped in the command's closure
     local currentTarget = nil
     local viewingPlayer = nil
     local orbitingPlayer = nil
@@ -13147,7 +13254,6 @@ addcmd('playerlist',{'plist'},function(args, speaker)
     local hiddenPlayers = {}
     local hiddenConnections = {}
 
-    -- Create Elements
     local EY_Gui = Instance.new("ScreenGui")
     EY_Gui.Name = "EternalYield_List"
     EY_Gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
@@ -13263,7 +13369,6 @@ addcmd('playerlist',{'plist'},function(args, speaker)
     local CopyDisplayBtn = createMenuBtn("CopyDisplayBtn", "Copy Display", 6)
     local HideBtn = createMenuBtn("HideBtn", "Hide", 7)
 
-    -- Dragging
     local dragging, dragInput, dragStart, startPos
     TitleBar.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -13552,6 +13657,69 @@ addcmd('playerlist',{'plist'},function(args, speaker)
     end)
 
     updatePlayerList()
+end)
+
+local cachedLeaderstats = {}
+
+addcmd('leaderstat', {'lstat'}, function(args, speaker)
+    local statName = args[1]
+    local statValue = args[2]
+    
+    if not statName or not statValue then
+        notify('Leaderstat', 'Usage: leaderstat [name] [value]')
+        return
+    end
+    
+    local LocalPlayer = game:GetService("Players").LocalPlayer
+    local leaderstats = LocalPlayer:FindFirstChild("leaderstats")
+    
+    if not leaderstats then
+        notify('Leaderstat', 'No leaderstats folder found!')
+        return
+    end
+    
+    local stat = leaderstats:FindFirstChild(statName)
+    
+    if stat then
+        if cachedLeaderstats[statName] == nil then
+            cachedLeaderstats[statName] = stat.Value
+        end
+        
+        if stat:IsA("IntValue") or stat:IsA("NumberValue") then
+            stat.Value = tonumber(statValue) or 0
+        elseif stat:IsA("BoolValue") then
+            stat.Value = (string.lower(statValue) == "true")
+        else
+            stat.Value = tostring(statValue)
+        end
+        
+        notify('Leaderstat', string.format("Set %s to %s", statName, tostring(stat.Value)))
+    else
+        notify('Leaderstat', string.format("Stat '%s' not found!", statName))
+    end
+end)
+
+addcmd('resetleaderstat', {'resetlstat'}, function(args, speaker)
+    local LocalPlayer = game:GetService("Players").LocalPlayer
+    local leaderstats = LocalPlayer:FindFirstChild("leaderstats")
+    
+    if not leaderstats then
+        notify('Leaderstat', 'No leaderstats folder found!')
+        return
+    end
+    
+    local count = 0
+    for name, originalValue in pairs(cachedLeaderstats) do
+        local stat = leaderstats:FindFirstChild(name)
+        if stat then
+            stat.Value = originalValue
+            count = count + 1
+        end
+    end
+    
+    cachedLeaderstats = {}
+    
+    notify('Leaderstat', string.format("Reverted %d stats to original", count))
 end)
 
 addcmd("chatlogswebhook", {"logswebhook"}, function(args, speaker)
@@ -14989,6 +15157,37 @@ addcmd('hitbox',{},function(args, speaker)
 	end
 end)
 
+addcmd("hitboxes", {}, function(args, speaker)
+    settings():GetService("RenderSettings").ShowBoundingBoxes = true
+end)
+
+addcmd("unhitboxes", {}, function(args, speaker)
+    settings():GetService("RenderSettings").ShowBoundingBoxes = false
+end)
+
+addcmd('stareat',{'stare'},function(args, speaker)
+	local players = getPlayer(args[1], speaker)
+	for i,v in pairs(players) do
+		if stareLoop then
+			stareLoop:Disconnect()
+		end
+		if not getRoot(Players.LocalPlayer.Character) and getRoot(Players[v].Character) then return end
+		local function stareFunc()
+			if Players.LocalPlayer.Character.PrimaryPart and Players:FindFirstChild(v) and Players[v].Character ~= nil and getRoot(Players[v].Character) then
+				local chrPos=Players.LocalPlayer.Character.PrimaryPart.Position
+				local tPos=getRoot(Players[v].Character).Position
+				local modTPos=Vector3.new(tPos.X,chrPos.Y,tPos.Z)
+				local newCF=CFrame.new(chrPos,modTPos)
+				Players.LocalPlayer.Character:SetPrimaryPartCFrame(newCF)
+			elseif not Players:FindFirstChild(v) then
+				stareLoop:Disconnect()
+			end
+		end
+
+		stareLoop = RunService.RenderStepped:Connect(stareFunc)
+	end
+end)
+
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 
@@ -15244,6 +15443,30 @@ addcmd("findfriendgroups", {}, function(args, speaker)
     end
 
     createPopup("Friend Groups", found == 0 and "None" or result)
+end)
+
+addcmd('notifyfriends', {}, function(args, speaker)
+    local Players = game:GetService("Players")
+    local LocalPlayer = Players.LocalPlayer
+    
+    local friendsInServer = 0
+    for _, plr in ipairs(Players:GetPlayers()) do
+        if plr ~= LocalPlayer and LocalPlayer:IsFriendsWith(plr.UserId) then
+            friendsInServer = friendsInServer + 1
+        end
+    end
+    
+    local onlineCount = 0
+    local success, onlineFriends = pcall(function()
+        return LocalPlayer:GetFriendsOnline(200) 
+    end)
+    
+    if success and onlineFriends then
+        onlineCount = #onlineFriends
+    end
+    
+    local notificationText = string.format("Server: %d | Online: %d", friendsInServer, onlineCount)
+    notify('Friends Status', notificationText)
 end)
 
 addcmd('removeterrain',{'rterrain','noterrain'},function(args, speaker)
@@ -16169,4 +16392,4 @@ elseif check("Delta") or check("Codex") or check("ArceusX") or check("Cryptic") 
 else
     notify("Executor Status", "Your executor is supported! " .. execName)
 end
-notify('Script last updated: 07/19/2026 at 9:59 PM')
+notify('Script last updated: 08/19/2026 at 2:49 PM')
