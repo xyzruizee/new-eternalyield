@@ -369,7 +369,7 @@ if makefolder and isfolder and writefile and isfile then
 	end)
 end
 
-currentVersion = "7.1.7"
+currentVersion = "7.1.8"
 
 ScaledHolder = Instance.new("Frame")
 Scale = Instance.new("UIScale")
@@ -4819,9 +4819,13 @@ CMDs[#CMDs + 1] = {NAME = 'unfreezeanims', DESC = 'Unfreezes your animations / p
 CMDs[#CMDs + 1] = {NAME = 'thaw / unfr [player] (CLIENT)', DESC = 'Unfreezes a player'}
 CMDs[#CMDs + 1] = {NAME = 'anchor', DESC = 'Anchors your characters RootPart'}
 CMDs[#CMDs + 1] = {NAME = 'unanchor', DESC = 'Unanchors your characters RootPart'}
+CMDs[#CMDs + 1] = {NAME = 'holdweld [player]', DESC = 'Welds you in the hand of the target'}
+CMDs[#CMDs + 1] = {NAME = 'unholdweld / stophweld', DESC = 'Stops welding in the hand'}
 CMDs[#CMDs + 1] = {NAME = 'weld / backweld / bweld [player]', DESC = 'Weld 3 studs behind a player'}
 CMDs[#CMDs + 1] = {NAME = 'frontweld / fweld [player]', DESC = 'Weld 3 studs in front of a player facing them'}
 CMDs[#CMDs + 1] = {NAME = 'unweld / uweld / unfrontweld [player]', DESC = 'Stops welding and restores physics pointer'}
+CMDs[#CMDs + 1] = {NAME = 'headweld / hweld [player]', DESC = 'Welds on the person head'}
+CMDs[#CMDs + 1] = {NAME = 'unheadweld /  unhweld [player]', DESC = 'Stops welding on the head'}
 CMDs[#CMDs + 1] = {NAME = 'infrontweld / iweld [player]', DESC = 'Welds you slightly in front of a player facing the same direction'}
 CMDs[#CMDs + 1] = {NAME = 'uninfrontweld / uniweld', DESC = 'Stops the infront weld loop'}
 CMDs[#CMDs + 1] = {NAME = 'tpposition / tppos [X Y Z]', DESC = 'Teleports you to certain coordinates'}
@@ -10364,6 +10368,48 @@ local function find_target_player(input_text)
     return nil
 end
 
+addcmd('holdweld', {'hweld', 'toolweld'}, function(args, speaker)
+    local targetPlayer = find_target_player(args[1])
+    if targetPlayer then
+        if getgenv().IY_WeldLoop then getgenv().IY_WeldLoop:Disconnect() end
+        getgenv().IY_WeldLoop = RunService.Heartbeat:Connect(function()
+            if targetPlayer and targetPlayer.Character and LocalPlayer.Character then
+                local player_root = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+                local target_char = targetPlayer.Character
+                
+                -- Support both R15 (RightHand) and R6 (Right Arm)
+                local target_hand = target_char:FindFirstChild("RightHand") or target_char:FindFirstChild("Right Arm")
+                
+                if player_root and target_hand then
+                    -- Positions you in front of their hand and tilts you forward like a tool
+                    player_root.CFrame = target_hand.CFrame 
+                        * CFrame.new(0, -1, -1) 
+                        * CFrame.Angles(math.rad(-90), 0, 0)
+                    
+                    player_root.Velocity = Vector3.zero
+                    
+                    if sethiddenproperty then
+                        pcall(sethiddenproperty, player_root, "PhysicsRepRootPart", target_hand)
+                    end
+                end
+            end
+        end)
+    end
+end)
+
+addcmd('unholdweld', {'unhweld', 'stophweld'}, function(args, speaker)
+    if getgenv().IY_WeldLoop then
+        getgenv().IY_WeldLoop:Disconnect()
+        getgenv().IY_WeldLoop = nil
+    end
+    if LocalPlayer.Character then
+        local player_root = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if player_root and sethiddenproperty then
+            pcall(sethiddenproperty, player_root, "PhysicsRepRootPart", player_root)
+        end
+    end
+end)
+
 if getgenv().IY_WeldLoop then
     getgenv().IY_WeldLoop:Disconnect()
     getgenv().IY_WeldLoop = nil
@@ -10422,6 +10468,38 @@ addcmd('unweld', {'uweld', 'unfrontweld'}, function(args, speaker)
     end
 end)
 
+addcmd('headweld', {'hweld', 'onhead'}, function(args, speaker)
+    local targetPlayer = find_target_player(args[1])
+    if targetPlayer then
+        if getgenv().IY_WeldLoop then getgenv().IY_WeldLoop:Disconnect() end
+        getgenv().IY_WeldLoop = RunService.Heartbeat:Connect(function()
+            if targetPlayer and targetPlayer.Character and LocalPlayer.Character then
+                local player_root = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+                local target_head = targetPlayer.Character:FindFirstChild("Head")
+                if player_root and target_head then
+                    player_root.CFrame = target_head.CFrame * CFrame.new(0, 2.5, 0)
+                    player_root.Velocity = Vector3.zero
+                    if sethiddenproperty then
+                        pcall(sethiddenproperty, player_root, "PhysicsRepRootPart", target_head)
+                    end
+                end
+            end
+        end)
+    end
+end)
+
+addcmd('unheadw', {'unfrontweld', 'unheadweld', 'unhweld'}, function(args, speaker)
+    if getgenv().IY_WeldLoop then
+        getgenv().IY_WeldLoop:Disconnect()
+        getgenv().IY_WeldLoop = nil
+    end
+    if LocalPlayer.Character then
+        local player_root = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if player_root and sethiddenproperty then
+            pcall(sethiddenproperty, player_root, "PhysicsRepRootPart", player_root)
+        end
+    end
+end)
 
 addcmd('infrontweld', {'iweld'}, function(args, speaker)
     local targetPlayer = find_target_player(args[1])
