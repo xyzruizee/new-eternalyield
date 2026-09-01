@@ -1,4 +1,4 @@
 {
-	"Version": "7.1.7",
-	"Announcement": "Added rtxgraphics / rtxg | leaderstat / lstat + resetleaderstat / resetlstat | notifyfriends"
+	"Version": "7.1.8",
+	"Announcement": "added holdweld and headweld"
 }
