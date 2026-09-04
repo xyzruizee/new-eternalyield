@@ -369,7 +369,7 @@ if makefolder and isfolder and writefile and isfile then
 	end)
 end
 
-currentVersion = "7.1.8"
+currentVersion = "7.20"
 
 ScaledHolder = Instance.new("Frame")
 Scale = Instance.new("UIScale")
@@ -5013,7 +5013,14 @@ CMDs[#CMDs + 1] = {NAME = 'appearanceid / aid [player]', DESC = 'Notifies a play
 CMDs[#CMDs + 1] = {NAME = 'copyappearanceid / caid [player]', DESC = 'Copies a players appearance ID to your clipboard'}
 CMDs[#CMDs + 1] = {NAME = 'bang [player] [speed]', DESC = 'owo'}
 CMDs[#CMDs + 1] = {NAME = 'unbang', DESC = 'uwu'}
-CMDs[#CMDs + 1] = {NAME = 'antibang / abang', DESC = 'Teleports you to NaN void for a second to kill bangers'}
+CMDs[#CMDs + 1] = {NAME = 'antibang / abang', DESC = 'Sends your server side position to the NaN void for 2s when someone gets on you'}
+CMDs[#CMDs + 1] = {NAME = 'desync / dsync', DESC = 'Freezes your position server side where you were standing, you keep moving'}
+CMDs[#CMDs + 1] = {NAME = 'undesync / unsync', DESC = 'Undoes desync'}
+CMDs[#CMDs + 1] = {NAME = 'visualize / vis', DESC = 'Circle on the floor showing the position the server has for you'}
+CMDs[#CMDs + 1] = {NAME = 'unvisualize / unvis', DESC = 'Undoes visualize'}
+CMDs[#CMDs + 1] = {NAME = 'mouselock / mlock [player] [part]', DESC = 'Drags your cursor onto a body part and keeps it there'}
+CMDs[#CMDs + 1] = {NAME = 'unmouselock / unmlock', DESC = 'Undoes mouselock'}
+CMDs[#CMDs + 1] = {NAME = 'executorvuln / excvuln / excv', DESC = 'Runs the executor vulnerability test'}
 CMDs[#CMDs + 1] = {NAME = 'jerk', DESC = 'Makes you jork it'}
 CMDs[#CMDs + 1] = {NAME = 'scare / spook [player]', DESC = 'Teleports in front of a player for half a second'}
 CMDs[#CMDs + 1] = {NAME = 'carpet [player]', DESC = 'Be someones carpet'}
@@ -12204,40 +12211,503 @@ addcmd("unbang", {"unrape"}, function(args, speaker)
 	end
 end)
 
+
+EYDesync = {}
+do
+	local enabled, hooked, targetCf, realCf, hrp, oldIdx = false, false
+
+	local function getRoot()
+		local char = Players.LocalPlayer and Players.LocalPlayer.Character
+		if not char then return nil end
+		local hum = char:FindFirstChildOfClass("Humanoid")
+		return (hum and hum.RootPart) or char:FindFirstChild("HumanoidRootPart")
+	end
+
+	EYDesync.root = getRoot
+
+	EYDesync.install = function()
+		if hooked then return true end
+		if type(hookmetamethod) ~= 'function' or type(checkcaller) ~= 'function' then
+			return false
+		end
+
+		local wrap = (type(newcclosure) == 'function') and newcclosure or function(f) return f end
+
+		local ok = pcall(function()
+			oldIdx = hookmetamethod(game, "__index", wrap(function(self, key)
+				if enabled and key == "CFrame" and realCf and self == hrp and not checkcaller() then
+					return realCf
+				end
+				return oldIdx(self, key)
+			end))
+		end)
+		if not ok or oldIdx == nil then return false end
+
+		hooked = true
+
+		RunService.Heartbeat:Connect(function()
+			if not enabled then return end
+			hrp = getRoot()
+			if not hrp then return end
+			realCf = hrp.CFrame
+			hrp.CFrame = targetCf or realCf
+			RunService.RenderStepped:Wait()
+			if hrp and hrp.Parent and realCf then
+				hrp.CFrame = realCf
+			end
+		end)
+
+		return true
+	end
+
+	EYDesync.start = function()
+		if not EYDesync.install() then return false end
+		hrp = getRoot()
+		if hrp then realCf = hrp.CFrame end
+		enabled = true
+		return true
+	end
+
+	EYDesync.stop = function()
+		enabled = false
+		targetCf = nil
+		local root = getRoot()
+		if root and realCf then pcall(function() root.CFrame = realCf end) end
+		realCf = nil
+	end
+
+	EYDesync.running = function() return enabled end
+
+	EYDesync.move = function(pos)
+		local t = typeof(pos)
+		if t == "CFrame" then
+			targetCf = pos
+		elseif t == "Vector3" then
+			targetCf = CFrame.new(pos)
+		else
+			return nil
+		end
+		return targetCf
+	end
+
+	EYDesync.sync = function()
+		targetCf = nil
+		return hrp and hrp.CFrame
+	end
+
+	EYDesync.desyncPos = function()
+		return (targetCf and targetCf.Position) or (realCf and realCf.Position)
+	end
+
+	EYDesync.rawPos = function()
+		return realCf and realCf.Position
+	end
+
+	local Q_KEY, D_KEY = 0x51, 0x44
+	local held, lastTap = nil, 0
+
+	EYDesync.keyUp = function()
+		if not held then return end
+		local key = held
+		held = nil
+		pcall(function()
+			if type(keyrelease) == "function" then keyrelease(key) end
+		end)
+	end
+
+	EYDesync.keyPump = function(gap)
+		if type(isrbxactive) == "function" then
+			local ok, active = pcall(isrbxactive)
+			if ok and not active then
+				EYDesync.keyUp()
+				return
+			end
+		end
+
+		gap = math.max(0.01, gap or 0.06)
+		local now = os.clock()
+		if now - lastTap < gap then return end
+		lastTap = now
+
+		local nextKey = (held == Q_KEY) and D_KEY or Q_KEY
+		EYDesync.keyUp()
+
+		if type(keypress) == "function" then
+			pcall(function() keypress(nextKey) end)
+			held = nextKey
+		else
+			local char = Players.LocalPlayer.Character
+			local hum = char and char:FindFirstChildOfClass("Humanoid")
+			if hum then
+				local side = (nextKey == D_KEY) and 1 or -1
+				pcall(function()
+					hum:Move(workspace.CurrentCamera.CFrame.RightVector * side, false)
+				end)
+			end
+		end
+	end
+end
+
 getgenv().AntiBangEnabled = false
 getgenv().IsAntiBanging = false
+getgenv().EYDesyncHeld = false
+getgenv().EYDesyncCF = nil
 
 addcmd('antibang', {'abang'}, function(args, speaker)
-    getgenv().AntiBangEnabled = not getgenv().AntiBangEnabled
+	getgenv().AntiBangEnabled = not getgenv().AntiBangEnabled
+
+	if getgenv().AntiBangEnabled then
+		if not EYDesync.install() then
+			getgenv().AntiBangEnabled = false
+			notify('Anti Bang', 'Your executor cant do this, it needs hookmetamethod and checkcaller')
+			return
+		end
+		notify('Anti Bang', 'On, you will go to the void for 2s when someone gets on you')
+	else
+		EYDesync.keyUp()
+		if not getgenv().EYDesyncHeld then
+			EYDesync.stop()
+		end
+		notify('Anti Bang', 'Off')
+	end
 end)
 
-game:GetService("RunService").Heartbeat:Connect(function()
-    if not getgenv().AntiBangEnabled or getgenv().IsAntiBanging then return end
-    
-    local lp = game:GetService("Players").LocalPlayer
-    local char = lp.Character
-    if not char then return end
-    local root = char:FindFirstChild("HumanoidRootPart")
-    if not root then return end
-    
-    for _, v in pairs(game:GetService("Players"):GetPlayers()) do
-        if v ~= lp and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
-            local dist = (v.Character.HumanoidRootPart.Position - root.Position).Magnitude
-            if dist < 4 then
-                getgenv().IsAntiBanging = true
-                
-                local oldCFrame = root.CFrame
-                root.CFrame = CFrame.new(9999999999999, 9999999999999, 9999999999999)
-                
-                task.wait(2)
-                
-                root.CFrame = oldCFrame
-                
-                getgenv().IsAntiBanging = false
-                break
-            end
-        end
-    end
+RunService.Heartbeat:Connect(function()
+	if not getgenv().AntiBangEnabled or getgenv().IsAntiBanging then return end
+
+	local lp = Players.LocalPlayer
+	local char = lp.Character
+	if not char then return end
+	local root = char:FindFirstChild("HumanoidRootPart")
+	if not root then return end
+
+	for _, v in pairs(Players:GetPlayers()) do
+		if v ~= lp and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
+			local dist = (v.Character.HumanoidRootPart.Position - root.Position).Magnitude
+			if dist < 4 then
+				getgenv().IsAntiBanging = true
+
+				task.spawn(function()
+					local hadDesync = EYDesync.running()
+					EYDesync.start()
+					EYDesync.move(Vector3.new(math.huge, math.huge, math.huge))
+
+					local finish = os.clock() + 2
+					while os.clock() < finish do
+						EYDesync.keyPump(0.06)
+						RunService.Heartbeat:Wait()
+					end
+
+					EYDesync.keyUp()
+					EYDesync.sync()
+
+					if not (hadDesync or getgenv().EYDesyncHeld) then
+						EYDesync.stop()
+					elseif getgenv().EYDesyncHeld and getgenv().EYDesyncCF then
+						EYDesync.move(getgenv().EYDesyncCF)
+					end
+
+					getgenv().IsAntiBanging = false
+				end)
+
+				break
+			end
+		end
+	end
+end)
+
+addcmd('desync', {'dsync'}, function(args, speaker)
+	if getgenv().EYDesyncHeld then
+		return notify('Desync', 'Already on, run undesync first')
+	end
+
+	if not EYDesync.install() then
+		return notify('Desync', 'Your executor cant do this, it needs hookmetamethod and checkcaller')
+	end
+
+	local root = EYDesync.root()
+	if not root then
+		return notify('Desync', 'No character')
+	end
+
+	EYDesync.start()
+	getgenv().EYDesyncCF = root.CFrame
+	EYDesync.move(getgenv().EYDesyncCF)
+	getgenv().EYDesyncHeld = true
+
+	notify('Desync', 'On, the server has you frozen where you were standing')
+
+	task.spawn(function()
+		while getgenv().EYDesyncHeld do
+			if not getgenv().IsAntiBanging and getgenv().EYDesyncCF then
+				EYDesync.move(getgenv().EYDesyncCF)
+			end
+			RunService.Heartbeat:Wait()
+		end
+	end)
+end)
+
+addcmd('undesync', {'unsync', 'undsync'}, function(args, speaker)
+	if not getgenv().EYDesyncHeld then
+		return notify('Desync', 'Not on')
+	end
+
+	getgenv().EYDesyncHeld = false
+	getgenv().EYDesyncCF = nil
+	EYDesync.sync()
+
+	if not getgenv().AntiBangEnabled then
+		EYDesync.keyUp()
+		EYDesync.stop()
+	end
+
+	notify('Desync', 'Off')
+end)
+
+getgenv().EYVisualPart = nil
+getgenv().EYVisualConn = nil
+
+addcmd('visualize', {'visualise', 'vis'}, function(args, speaker)
+	if getgenv().EYVisualPart then
+		return notify('Visualize', 'Already on')
+	end
+
+	local disc = Instance.new("Part")
+	disc.Name = "EY_Visualize"
+	disc.Anchored = true
+	disc.CanCollide = false
+	disc.CanQuery = false
+	disc.CanTouch = false
+	disc.Massless = true
+	disc.Material = Enum.Material.Neon
+	disc.Color = Color3.fromRGB(0, 255, 140)
+	disc.Transparency = 0.45
+	disc.Size = Vector3.new(8, 0.2, 8)
+
+	local mesh = Instance.new("CylinderMesh")
+	mesh.Parent = disc
+	disc.Parent = workspace
+
+	getgenv().EYVisualPart = disc
+
+	getgenv().EYVisualConn = RunService.Heartbeat:Connect(function()
+		local part = getgenv().EYVisualPart
+		if not (part and part.Parent) then return end
+
+		local pos = EYDesync.running() and EYDesync.desyncPos() or nil
+		if not pos then
+			local root = EYDesync.root()
+			pos = root and root.Position
+		end
+		if not pos then return end
+
+		if pos.X ~= pos.X or math.abs(pos.X) == math.huge
+			or pos.Y ~= pos.Y or math.abs(pos.Y) == math.huge
+			or pos.Z ~= pos.Z or math.abs(pos.Z) == math.huge then
+			return
+		end
+
+		local params = RaycastParams.new()
+		params.FilterType = Enum.RaycastFilterType.Exclude
+		params.FilterDescendantsInstances = { part, Players.LocalPlayer.Character }
+
+		local hit = workspace:Raycast(pos, Vector3.new(0, -60, 0), params)
+		local ground = hit and (hit.Position + Vector3.new(0, 0.1, 0)) or (pos - Vector3.new(0, 3, 0))
+
+		part.CFrame = CFrame.new(ground)
+	end)
+
+	notify('Visualize', 'On')
+end)
+
+addcmd('unvisualize', {'unvisualise', 'unvis', 'novis'}, function(args, speaker)
+	if getgenv().EYVisualConn then
+		getgenv().EYVisualConn:Disconnect()
+		getgenv().EYVisualConn = nil
+	end
+	if getgenv().EYVisualPart then
+		pcall(function() getgenv().EYVisualPart:Destroy() end)
+		getgenv().EYVisualPart = nil
+	end
+	notify('Visualize', 'Off')
+end)
+
+getgenv().EYMouseLock = nil
+
+function EYFindPlayer(query)
+	if type(query) ~= "string" or query == "" then return nil end
+
+	local want = string.lower(query)
+	if string.sub(want, 1, 1) == "@" then want = string.sub(want, 2) end
+
+	for _, plr in ipairs(Players:GetPlayers()) do
+		if string.lower(plr.Name) == want then return plr end
+	end
+
+	for _, plr in ipairs(Players:GetPlayers()) do
+		if string.lower(plr.DisplayName) == want then return plr end
+	end
+
+	for _, plr in ipairs(Players:GetPlayers()) do
+		if string.sub(string.lower(plr.Name), 1, #want) == want then return plr end
+	end
+
+	for _, plr in ipairs(Players:GetPlayers()) do
+		if string.sub(string.lower(plr.DisplayName), 1, #want) == want then return plr end
+	end
+
+	for _, plr in ipairs(Players:GetPlayers()) do
+		if string.find(string.lower(plr.Name), want, 1, true)
+			or string.find(string.lower(plr.DisplayName), want, 1, true) then
+			return plr
+		end
+	end
+
+	return nil
+end
+
+function EYFindPart(char, wanted)
+	if not char then return nil end
+
+	local want = string.lower(tostring(wanted or "head"))
+
+	local exact = char:FindFirstChild(wanted)
+	if exact and exact:IsA("BasePart") then return exact end
+
+	for _, d in ipairs(char:GetChildren()) do
+		if d:IsA("BasePart") and string.lower(d.Name) == want then return d end
+	end
+
+	for _, d in ipairs(char:GetChildren()) do
+		if d:IsA("BasePart") and string.find(string.lower(d.Name), want, 1, true) then
+			return d
+		end
+	end
+
+	return char:FindFirstChild("Head")
+		or char:FindFirstChild("HumanoidRootPart")
+		or char:FindFirstChild("UpperTorso")
+		or char:FindFirstChild("Torso")
+end
+
+addcmd('mouselock', {'mlock', 'lockmouse'}, function(args, speaker)
+	local hasRel = type(mousemoverel) == "function"
+	local hasAbs = type(mousemoveabs) == "function"
+
+	if not hasRel and not hasAbs then
+		return notify('Mouse Lock', 'Your executor has no mousemoverel or mousemoveabs')
+	end
+
+	local target = EYFindPlayer(args[1])
+
+	if not target then
+		local list = getPlayer(args[1], speaker)
+		if #list > 0 then target = Players:FindFirstChild(list[1]) end
+	end
+
+	if not target then
+		return notify('Mouse Lock', 'No player found for ' .. tostring(args[1]))
+	end
+
+	if target == Players.LocalPlayer then
+		return notify('Mouse Lock', 'Pick someone else')
+	end
+
+	local partName = args[2] or "Head"
+
+	if getgenv().EYMouseLock then
+		getgenv().EYMouseLock:Disconnect()
+		getgenv().EYMouseLock = nil
+	end
+
+	local inset = Vector2.new(0, 36)
+	pcall(function()
+		local top = game:GetService("GuiService"):GetGuiInset()
+		inset = Vector2.new(top.X, top.Y)
+	end)
+
+	local mode = hasRel and "rel" or "abs"
+	local lastPos = nil
+	local stuck = 0
+
+	getgenv().EYMouseLock = RunService.RenderStepped:Connect(function()
+		if not target.Parent then
+			if getgenv().EYMouseLock then
+				getgenv().EYMouseLock:Disconnect()
+				getgenv().EYMouseLock = nil
+			end
+			notify('Mouse Lock', 'Target left, turned off')
+			return
+		end
+
+		if type(isrbxactive) == "function" then
+			local ok, active = pcall(isrbxactive)
+			if ok and not active then return end
+		end
+
+		local part = EYFindPart(target.Character, partName)
+		if not part then return end
+
+		local screen, onScreen = workspace.CurrentCamera:WorldToViewportPoint(part.Position)
+		if not onScreen then return end
+
+		pcall(function()
+			if UserInputService.MouseBehavior ~= Enum.MouseBehavior.Default then
+				UserInputService.MouseBehavior = Enum.MouseBehavior.Default
+			end
+		end)
+
+		local cur = Vector2.new(IYMouse.X, IYMouse.Y)
+		local dx = screen.X - cur.X
+		local dy = screen.Y - cur.Y
+
+		if lastPos and math.abs(dx) > 3 and math.abs(dy) > 3
+			and (cur - lastPos).Magnitude < 0.5 then
+			stuck = stuck + 1
+			if stuck > 15 and hasRel and hasAbs then
+				mode = (mode == "rel") and "abs" or "rel"
+				stuck = 0
+				notify('Mouse Lock', 'Switched to ' .. mode)
+			end
+		else
+			stuck = 0
+		end
+		lastPos = cur
+
+		if math.abs(dx) < 1 and math.abs(dy) < 1 then return end
+
+		if mode == "rel" then
+			local rx = (dx < 0) and math.ceil(dx) or math.floor(dx)
+			local ry = (dy < 0) and math.ceil(dy) or math.floor(dy)
+			pcall(function() mousemoverel(rx, ry) end)
+		else
+			pcall(function()
+				mousemoveabs(math.floor(screen.X + inset.X), math.floor(screen.Y + inset.Y))
+			end)
+		end
+	end)
+
+	notify('Mouse Lock', 'On ' .. target.Name .. ' (' .. target.DisplayName .. '), part ' .. tostring(partName) .. ', using ' .. mode)
+end)
+
+addcmd('unmouselock', {'unmlock', 'nomouselock', 'nomlock'}, function(args, speaker)
+	if getgenv().EYMouseLock then
+		getgenv().EYMouseLock:Disconnect()
+		getgenv().EYMouseLock = nil
+	end
+	notify('Mouse Lock', 'Off')
+end)
+
+addcmd('executorvuln', {'excvuln', 'excv'}, function(args, speaker)
+	notify('Executor', 'Running the vulnerability test')
+	task.spawn(function()
+		local ok, err = pcall(function()
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/aihkw/exe-test/refs/heads/main/executor_vuln_test.lua"))()
+		end)
+		if not ok then
+			notify('Executor', 'Test failed: ' .. tostring(err))
+		end
+	end)
 end)
 
 addcmd('carpet',{},function(args, speaker)
