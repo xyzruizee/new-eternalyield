@@ -1,4 +1,4 @@
 {
-	"Version": "7.1.8",
-	"Announcement": "added holdweld and headweld"
+	"Version": "7.20",
+	"Announcement": "added holdweld and headweld + desync & visualizer and mouselock (bugged) Important: eternal yield is now discontinued and will no longer get updates or fixes"
 }
